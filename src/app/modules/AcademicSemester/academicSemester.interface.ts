@@ -1,4 +1,4 @@
-export type IAcademicFilterableFields = {
+export type IAcademicSemesterFilterableFields = {
   searchTerm?: string;
   title?: string;
   year?: number;

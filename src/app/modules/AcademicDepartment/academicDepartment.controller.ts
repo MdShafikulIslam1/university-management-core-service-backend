@@ -1,54 +1,49 @@
-import httpStatus from 'http-status';
+import { AcademicDepartmentService } from './academicDepartment.service';
 import catchAsync from '../../../shared/catchAsync';
 import sendResponse from '../../../shared/sendResponse';
-import { AcademicSemesterService } from './academicSemester.service';
 import pick from '../../../shared/pick';
+import { academicDepartmentFilterableFields } from './academicDepartment.constant';
 import { paginationOptionFields } from '../../../common/paginationOptions';
-import { academicSemesterFilterableFields } from './academicSemester.constant';
+import httpStatus from 'http-status';
 
 const create = catchAsync(async (req, res) => {
   const { ...data } = req.body;
-  const result = await AcademicSemesterService.create(data);
+  const result = await AcademicDepartmentService.create(data);
   sendResponse(res, {
     statusCode: httpStatus.OK,
     success: true,
-    message: 'Successfully create a AcademicSemester',
+    message: 'Successfully created an AcademicDepartment',
     data: result,
   });
 });
+
 const getAll = catchAsync(async (req, res) => {
-  const filters = pick(req.query, academicSemesterFilterableFields);
+  const filters = pick(req.query, academicDepartmentFilterableFields);
   const paginationOptions = pick(req.query, paginationOptionFields);
-  const result = await AcademicSemesterService.getAll(
+  const result = await AcademicDepartmentService.getAll(
     filters,
     paginationOptions
   );
   sendResponse(res, {
     statusCode: httpStatus.OK,
     success: true,
-    message: 'Successfully Get all AcademicSemester',
-    data: result,
-  });
-});
-const getSingle = catchAsync(async (req, res) => {
-  const result = await AcademicSemesterService.getSingle(req.params.id);
-  sendResponse(res, {
-    statusCode: httpStatus.OK,
-    success: true,
-    message: 'Successfully Get a AcademicSemester',
+    message: 'Successfully got all AcademicDepartments',
     data: result,
   });
 });
 
-const deleteAllData = catchAsync(async (req, res) => {
-  const result = await AcademicSemesterService.deleteAllData();
-  res.status(httpStatus.OK).json({
+const getSingle = catchAsync(async (req, res) => {
+  const result = await AcademicDepartmentService.getSingle(req.params.id);
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: 'Successfully got an AcademicDepartment',
     data: result,
   });
 });
-export const AcademicSemesterController = {
+
+export const AcademicDepartmentController = {
   create,
   getAll,
   getSingle,
-  deleteAllData,
 };
