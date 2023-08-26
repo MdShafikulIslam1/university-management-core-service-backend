@@ -80,8 +80,36 @@ const getSingle = async (id: string): Promise<Building | null> => {
   });
   return result;
 };
+const deleteOne = async (id: string): Promise<Building | null> => {
+  const result = await prisma.building.delete({
+    where: {
+      id,
+    },
+  });
+  return result;
+};
+const updateOne = async (
+  id: string,
+  data: Partial<Building>
+): Promise<Building | null> => {
+  const result = await prisma.building.update({
+    where: {
+      id,
+    },
+    data,
+  });
+  return result;
+};
+// MOST DANGEROUS
+const deleteAllData = async () => {
+  const result = await prisma.building.deleteMany();
+  return result;
+};
 export const BuildingService = {
   create,
   getAll,
   getSingle,
+  deleteOne,
+  deleteAllData,
+  updateOne,
 };

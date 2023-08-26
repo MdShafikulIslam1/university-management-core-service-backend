@@ -1,17 +1,7 @@
-export const studentFilterableFields = [
+export const courseFilterableFields = [
   'searchTerm',
-  'studentId',
-  'firstName',
-  'lastName',
-  'middleName',
-  'email',
-  'gender',
+  'title',
+  'code',
+  'credits',
 ];
-export const studentSearchableFields = [
-  'firstName',
-  'lastName',
-  'middleName',
-  'email',
-  'gender',
-  'contactNo',
-];
+export const courseSearchableFields = ['title', 'code', 'credits'];

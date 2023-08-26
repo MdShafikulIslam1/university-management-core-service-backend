@@ -53,6 +53,7 @@ model Faculty {
 
   academicDepartmentId String
   academicDepartment   AcademicDepartment @relation(fields: [academicDepartmentId], references: [id])
+  courses              CourseFaculty[]
 
   @@map("faculties")
 }
@@ -83,15 +84,16 @@ model AcademicDepartment {
 }
 
 model AcademicSemester {
-  id         String    @id @default(uuid())
-  title      String
-  year       Int
-  code       String
-  startMonth String
-  endMonth   String
-  createdAt  DateTime  @default(now())
-  updatedAt  DateTime  @updatedAt
-  students   Student[]
+  id                    String                 @id @default(uuid())
+  title                 String
+  year                  Int
+  code                  String
+  startMonth            String
+  endMonth              String
+  createdAt             DateTime               @default(now())
+  updatedAt             DateTime               @updatedAt
+  students              Student[]
+  semesterRegistrations SemesterRegistration[]
 
   @@map("academicSemesters")
 }
@@ -105,6 +107,7 @@ model Course {
   updatedAt       DateTime               @updatedAt
   prerequisite    CourseToPrerequisite[] @relation("CourseToPrerequisite")
   prerequisiteFor CourseToPrerequisite[] @relation("PrerequisteToCourse")
+  faculties       CourseFaculty[]
 
   @@map("courses")
 }
@@ -141,4 +144,35 @@ model Room {
   building   Building @relation(fields: [buildingId], references: [id])
 
   @@map("rooms")
+}
+
+model CourseFaculty {
+  courseId  String
+  course    Course  @relation(fields: [courseId], references: [id])
+  facultyId String
+  faculty   Faculty @relation(fields: [facultyId], references: [id])
+
+  @@id([courseId, facultyId])
+  @@map("courseFaculties")
+}
+
+model SemesterRegistration {
+  id                 String                      @id @default(uuid())
+  startDate          DateTime
+  endDate            DateTime
+  status             SemesterRegistrationStatus? @default(UPCOMING)
+  minCredit          Int                         @default(0)
+  maxCredit          Int                         @default(0)
+  createdAt          DateTime                    @default(now())
+  updatedAt          DateTime                    @updatedAt
+  academicSemesterId String
+  academicSemester   AcademicSemester            @relation(fields: [academicSemesterId], references: [id])
+
+  @@map("semesterRegistrations")
+}
+
+enum SemesterRegistrationStatus {
+  UPCOMING
+  ONGOING
+  ENDED
 }

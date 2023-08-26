@@ -82,8 +82,36 @@ const getSingle = async (id: string): Promise<AcademicDepartment | null> => {
   });
   return result;
 };
+const deleteOne = async (id: string): Promise<AcademicDepartment | null> => {
+  const result = await prisma.academicDepartment.delete({
+    where: {
+      id,
+    },
+  });
+  return result;
+};
+const updateOne = async (
+  id: string,
+  data: Partial<AcademicDepartment>
+): Promise<AcademicDepartment | null> => {
+  const result = await prisma.academicDepartment.update({
+    where: {
+      id,
+    },
+    data,
+  });
+  return result;
+};
+// MOST DANGEROUS
+const deleteAllData = async () => {
+  const result = await prisma.academicDepartment.deleteMany();
+  return result;
+};
 export const AcademicDepartmentService = {
   create,
   getAll,
   getSingle,
+  deleteOne,
+  updateOne,
+  deleteAllData,
 };

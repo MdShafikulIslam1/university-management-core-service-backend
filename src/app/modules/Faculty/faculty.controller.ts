@@ -39,8 +39,62 @@ const getSingle = catchAsync(async (req, res) => {
   });
 });
 
+const deleteOne = catchAsync(async (req, res) => {
+  const result = await FacultyService.deleteOne(req.params.id);
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: 'Successfully Delete a Faculty',
+    data: result,
+  });
+});
+const updateOne = catchAsync(async (req, res) => {
+  const result = await FacultyService.updateOne(req.params.id, req.body);
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: 'Successfully Update a Faculty',
+    data: result,
+  });
+});
+
+const deleteAllData = catchAsync(async (req, res) => {
+  const result = await FacultyService.deleteAllData();
+  res.status(httpStatus.OK).json({
+    data: result,
+  });
+});
+const assignCourse = catchAsync(async (req, res) => {
+  const result = await FacultyService.assignCourse(
+    req.params.id,
+    req.body.courses
+  );
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: 'Successfully Assign course to Faculty ',
+    data: result,
+  });
+});
+const removeCourse = catchAsync(async (req, res) => {
+  const result = await FacultyService.removeCourse(
+    req.params.id,
+    req.body.courses
+  );
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: 'Rest courses are here ',
+    data: result,
+  });
+});
 export const FacultyController = {
   create,
   getAll,
   getSingle,
+  deleteAllData,
+  deleteOne,
+  updateOne,
+  assignCourse,
+  removeCourse,
 };

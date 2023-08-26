@@ -9,5 +9,9 @@ router.post(
   StudentController.create
 );
 router.get('/', StudentController.getAll);
+router.delete('/', StudentController.deleteAllData);
 router.get('/:id', StudentController.getSingle);
+router.patch('/:id', StudentController.updateOne);
+router.delete('/:id', StudentController.deleteOne);
+
 export const StudentRoutes = router;

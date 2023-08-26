@@ -75,6 +75,48 @@ CREATE TABLE "academicSemesters" (
     CONSTRAINT "academicSemesters_pkey" PRIMARY KEY ("id")
 );
 
+-- CreateTable
+CREATE TABLE "courses" (
+    "id" TEXT NOT NULL,
+    "title" TEXT NOT NULL,
+    "code" TEXT NOT NULL,
+    "credits" INTEGER NOT NULL DEFAULT 0,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMP(3) NOT NULL,
+
+    CONSTRAINT "courses_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "CourseToPrerequisite" (
+    "courseId" TEXT NOT NULL,
+    "prerequisiteId" TEXT NOT NULL,
+
+    CONSTRAINT "CourseToPrerequisite_pkey" PRIMARY KEY ("courseId","prerequisiteId")
+);
+
+-- CreateTable
+CREATE TABLE "buildings" (
+    "id" TEXT NOT NULL,
+    "title" TEXT NOT NULL,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMP(3) NOT NULL,
+
+    CONSTRAINT "buildings_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "rooms" (
+    "id" TEXT NOT NULL,
+    "roomNumber" TEXT NOT NULL,
+    "floor" TEXT NOT NULL,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMP(3) NOT NULL,
+    "buildingId" TEXT NOT NULL,
+
+    CONSTRAINT "rooms_pkey" PRIMARY KEY ("id")
+);
+
 -- CreateIndex
 CREATE UNIQUE INDEX "students_email_key" ON "students"("email");
 
@@ -83,6 +125,9 @@ CREATE UNIQUE INDEX "faculties_email_key" ON "faculties"("email");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "academicFaculties_title_key" ON "academicFaculties"("title");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "buildings_title_key" ON "buildings"("title");
 
 -- AddForeignKey
 ALTER TABLE "students" ADD CONSTRAINT "students_academicFacultyId_fkey" FOREIGN KEY ("academicFacultyId") REFERENCES "academicFaculties"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
@@ -101,3 +146,12 @@ ALTER TABLE "faculties" ADD CONSTRAINT "faculties_academicDepartmentId_fkey" FOR
 
 -- AddForeignKey
 ALTER TABLE "academicDepartments" ADD CONSTRAINT "academicDepartments_academicFacultyId_fkey" FOREIGN KEY ("academicFacultyId") REFERENCES "academicFaculties"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "CourseToPrerequisite" ADD CONSTRAINT "CourseToPrerequisite_courseId_fkey" FOREIGN KEY ("courseId") REFERENCES "courses"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "CourseToPrerequisite" ADD CONSTRAINT "CourseToPrerequisite_prerequisiteId_fkey" FOREIGN KEY ("prerequisiteId") REFERENCES "courses"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "rooms" ADD CONSTRAINT "rooms_buildingId_fkey" FOREIGN KEY ("buildingId") REFERENCES "buildings"("id") ON DELETE RESTRICT ON UPDATE CASCADE;

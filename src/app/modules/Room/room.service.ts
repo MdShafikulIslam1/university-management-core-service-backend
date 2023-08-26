@@ -80,8 +80,36 @@ const getSingle = async (id: string): Promise<Room | null> => {
   });
   return result;
 };
+const deleteOne = async (id: string): Promise<Room | null> => {
+  const result = await prisma.room.delete({
+    where: {
+      id,
+    },
+  });
+  return result;
+};
+const updateOne = async (
+  id: string,
+  data: Partial<Room>
+): Promise<Room | null> => {
+  const result = await prisma.room.update({
+    where: {
+      id,
+    },
+    data,
+  });
+  return result;
+};
+// MOST DANGEROUS
+const deleteAllData = async () => {
+  const result = await prisma.room.deleteMany();
+  return result;
+};
 export const RoomService = {
   create,
   getAll,
   getSingle,
+  deleteAllData,
+  deleteOne,
+  updateOne,
 };

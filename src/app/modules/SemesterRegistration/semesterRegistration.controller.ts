@@ -1,70 +1,78 @@
 import httpStatus from 'http-status';
 import sendResponse from '../../../shared/sendResponse';
+import { SemesterRegistrationService } from './semesterRegistration.service';
 import catchAsync from '../../../shared/catchAsync';
-import { BuildingService } from './building.service';
-import pick from '../../../shared/pick';
 import { paginationOptionFields } from '../../../common/paginationOptions';
-import { buildingFilterableFields } from './building.constant';
+import pick from '../../../shared/pick';
+import { semesterRegistrationFilterableFields } from './semesterRegistration.constant';
 
 const create = catchAsync(async (req, res) => {
-  const result = await BuildingService.create(req.body);
+  const result = await SemesterRegistrationService.create({ ...req.body });
   sendResponse(res, {
     statusCode: httpStatus.OK,
     success: true,
-    message: 'Successfully create a Building',
+    message: 'Successfully create a SemesterRegistration',
     data: result,
   });
 });
+
 const getAll = catchAsync(async (req, res) => {
-  const filters = pick(req.query, buildingFilterableFields);
+  const filters = pick(req.query, semesterRegistrationFilterableFields);
   const paginationOptions = pick(req.query, paginationOptionFields);
-  const result = await BuildingService.getAll(filters, paginationOptions);
+  const result = await SemesterRegistrationService.getAll(
+    filters,
+    paginationOptions
+  );
   sendResponse(res, {
     statusCode: httpStatus.OK,
     success: true,
-    message: 'Successfully Get all AcademicSemester',
+    message: 'Successfully Get all SemesterRegistrations',
     data: result,
   });
 });
+
 const getSingle = catchAsync(async (req, res) => {
-  const result = await BuildingService.getSingle(req.params.id);
+  const result = await SemesterRegistrationService.getSingle(req.params.id);
   sendResponse(res, {
     statusCode: httpStatus.OK,
     success: true,
-    message: 'Successfully Get a Building data',
+    message: 'Successfully Get a SemesterRegistration',
     data: result,
   });
 });
 const deleteOne = catchAsync(async (req, res) => {
-  const result = await BuildingService.deleteOne(req.params.id);
+  const result = await SemesterRegistrationService.deleteOne(req.params.id);
   sendResponse(res, {
     statusCode: httpStatus.OK,
     success: true,
-    message: 'Successfully Delete a Building',
+    message: 'Successfully Delete a SemesterRegistration',
     data: result,
   });
 });
 const updateOne = catchAsync(async (req, res) => {
-  const result = await BuildingService.updateOne(req.params.id, req.body);
+  const result = await SemesterRegistrationService.updateOne(
+    req.params.id,
+    req.body
+  );
   sendResponse(res, {
     statusCode: httpStatus.OK,
     success: true,
-    message: 'Successfully Update a Building',
+    message: 'Successfully Update a SemesterRegistration',
     data: result,
   });
 });
 
 const deleteAllData = catchAsync(async (req, res) => {
-  const result = await BuildingService.deleteAllData();
+  const result = await SemesterRegistrationService.deleteAllData();
   res.status(httpStatus.OK).json({
     data: result,
   });
 });
-export const BuildingController = {
+export const SemesterRegistrationController = {
   create,
   getAll,
   getSingle,
-  deleteOne,
   deleteAllData,
+  deleteOne,
   updateOne,
 };

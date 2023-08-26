@@ -8,4 +8,10 @@ router.post(
   validateRequest(RoomZodSchema.create),
   RoomController.create
 );
+
+router.get('/', RoomController.getAll);
+router.delete('/', RoomController.deleteAllData);
+router.get('/:id', RoomController.getSingle);
+router.patch('/:id', RoomController.updateOne);
+router.delete('/:id', RoomController.deleteOne);
 export const RoomRoutes = router;

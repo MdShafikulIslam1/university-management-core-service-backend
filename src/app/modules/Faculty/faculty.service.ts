@@ -1,10 +1,12 @@
-import { Faculty, Prisma } from '@prisma/client';
+import { CourseFaculty, Faculty, Prisma } from '@prisma/client';
 import prisma from '../../../shared/prisma';
 import { paginationHelpers } from '../../../helpers/paginationHelpers';
 import { IGenericResponse } from '../../../interfaces/common';
 import { facultySearchableFields } from './faculty.constant';
 import { IPaginationOptions } from '../../../interfaces/paginationOptions';
 import { IFacultyFilterableFields } from './faculty.interface';
+import ApiError from '../../../error/ApiError';
+import httpStatus from 'http-status';
 
 const create = async (data: Faculty): Promise<Faculty> => {
   const result = await prisma.faculty.create({
@@ -87,8 +89,113 @@ const getSingle = async (id: string): Promise<Faculty | null> => {
   return result;
 };
 
+const deleteOne = async (id: string): Promise<Faculty | null> => {
+  const result = await prisma.faculty.delete({
+    where: {
+      id,
+    },
+  });
+  return result;
+};
+const updateOne = async (
+  id: string,
+  data: Partial<Faculty>
+): Promise<Faculty | null> => {
+  const result = await prisma.faculty.update({
+    where: {
+      id,
+    },
+    data,
+  });
+  return result;
+};
+// MOST DANGEROUS
+const deleteAllData = async () => {
+  const result = await prisma.faculty.deleteMany();
+  return result;
+};
+const assignCourse = async (
+  facultyId: string,
+  payload: string[]
+): Promise<CourseFaculty[]> => {
+  const result = await prisma.courseFaculty.createMany({
+    data: payload.map(courseId => ({
+      facultyId,
+      courseId: courseId,
+    })),
+  });
+  if (!result) {
+    throw new ApiError(
+      httpStatus.BAD_REQUEST,
+      'Failed to assign course to faculty'
+    );
+  }
+  const responseData = await prisma.courseFaculty.findMany({
+    where: {
+      facultyId,
+    },
+    include: {
+      course: true,
+    },
+  });
+  return responseData;
+};
+
+const removeCourse = async (
+  facultyId: string,
+  courses: string[]
+): Promise<CourseFaculty[] | null> => {
+  const isExistCourse = await prisma.courseFaculty.findMany({
+    where: {
+      AND: [
+        {
+          facultyId,
+        },
+        {
+          courseId: {
+            in: courses,
+          },
+        },
+      ],
+    },
+    include: {
+      course: true,
+    },
+  });
+  if (!isExistCourse.length) {
+    throw new ApiError(
+      httpStatus.BAD_REQUEST,
+      'Oops! there is no any course under the faculty'
+    );
+  }
+  const result = await prisma.courseFaculty.deleteMany({
+    where: {
+      facultyId,
+      courseId: {
+        in: courses,
+      },
+    },
+  });
+  if (!result) {
+    throw new ApiError(httpStatus.BAD_REQUEST, 'Failed to deleted course');
+  }
+  const responseData = await prisma.courseFaculty.findMany({
+    where: {
+      facultyId,
+    },
+    include: {
+      course: true,
+    },
+  });
+  return responseData;
+};
 export const FacultyService = {
   create,
   getAll,
   getSingle,
+  deleteAllData,
+  deleteOne,
+  updateOne,
+  assignCourse,
+  removeCourse,
 };

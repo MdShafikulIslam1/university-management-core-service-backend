@@ -10,6 +10,12 @@ const create = z.object({
     }),
   }),
 });
+const update = z.object({
+  body: z.object({
+    title: z.string().optional(),
+  }),
+});
 export const AcademicDepartmentZodSchema = {
   create,
+  update,
 };
